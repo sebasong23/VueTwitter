@@ -9,7 +9,7 @@
         <li><a href="#">Explore</a></li>
         <li><a href="#">Notifications</a></li>
         <li><a href="#">Messages</a></li>
-        <li><a href="#">Profile</a></li>
+        <li v-if="user"><a href="#">Profile</a></li>
       </ul>
     </nav>
     <div class="user-actions">
@@ -21,14 +21,31 @@
         <span v-if="isDarkMode">☀️</span>
         <span v-else>🌙</span>
       </button>
-      <button class="tweet-btn">Tweet</button>
+      <button v-if="user" class="tweet-btn">Tweet</button>
+      <button v-else class="login-btn" @click="$emit('login')">Log in</button>
+      <UserProfile
+        v-if="user"
+        :user="user"
+        @logout="$emit('logout')"
+      />
     </div>
   </header>
 </template>
 
 <script>
+import UserProfile from './UserProfile.vue'
+
 export default {
   name: 'TwitterHeader',
+  components: {
+    UserProfile
+  },
+  props: {
+    user: {
+      type: Object,
+      default: null
+    }
+  },
   data() {
     return {
       isDarkMode: false
@@ -105,6 +122,7 @@ export default {
 .user-actions {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .theme-toggle {
@@ -138,5 +156,20 @@ export default {
 
 .tweet-btn:hover {
   background-color: var(--primary-color-dark);
+}
+
+.login-btn {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 30px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: rgba(29, 161, 242, 0.1);
 }
 </style>
