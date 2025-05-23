@@ -25,6 +25,12 @@
           @notification-click="handleNotificationClick"
         />
       </div>
+      <div v-else-if="currentView === 'messages'">
+        <MessagesPage
+          :current-user="currentUser"
+          @view-profile="navigateToProfile"
+        />
+      </div>
       <Sidebar
         @search="handleSearch"
         @select-result="handleSelectResult"
@@ -75,6 +81,7 @@ import MobileNavigation from './components/MobileNavigation.vue'
 import ProfilePage from './components/ProfilePage.vue'
 import ProfileEditor from './components/ProfileEditor.vue'
 import NotificationsPage from './components/NotificationsPage.vue'
+import MessagesPage from './components/MessagesPage.vue'
 
 export default {
   name: 'App',
@@ -86,7 +93,8 @@ export default {
     MobileNavigation,
     ProfilePage,
     ProfileEditor,
-    NotificationsPage
+    NotificationsPage,
+    MessagesPage
   },
   data() {
     return {
@@ -169,6 +177,12 @@ export default {
         }
       } else if (tab === 'notifications') {
         this.currentView = 'notifications';
+      } else if (tab === 'messages') {
+        if (this.currentUser) {
+          this.currentView = 'messages';
+        } else {
+          this.showAuth = true;
+        }
       } else {
         // Handle other tabs
         console.log('Other tab selected:', tab);
