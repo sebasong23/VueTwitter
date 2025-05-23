@@ -290,6 +290,29 @@ export default {
   margin-top: 10px;
 }
 
+@media (max-width: 480px) {
+  .tweet {
+    padding: 10px;
+  }
+
+  .tweet-avatar img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .tweet-text {
+    font-size: 14px;
+  }
+
+  .tweet-actions {
+    max-width: 100%;
+  }
+
+  .action-count {
+    display: none;
+  }
+}
+
 .tweet-action {
   display: flex;
   align-items: center;

@@ -8,10 +8,10 @@
         <form @submit.prevent="handleRegister">
           <div class="form-group">
             <label for="name">Name</label>
-            <input 
-              type="text" 
-              id="name" 
-              v-model="registerForm.name" 
+            <input
+              type="text"
+              id="name"
+              v-model="registerForm.name"
               required
               :class="{ 'error': errors.name }"
             >
@@ -19,10 +19,10 @@
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              v-model="registerForm.email" 
+            <input
+              type="email"
+              id="email"
+              v-model="registerForm.email"
               required
               :class="{ 'error': errors.email }"
             >
@@ -30,10 +30,10 @@
           </div>
           <div class="form-group">
             <label for="username">Username</label>
-            <input 
-              type="text" 
-              id="username" 
-              v-model="registerForm.username" 
+            <input
+              type="text"
+              id="username"
+              v-model="registerForm.username"
               required
               :class="{ 'error': errors.username }"
             >
@@ -42,16 +42,16 @@
           <div class="form-group">
             <label for="password">Password</label>
             <div class="password-input">
-              <input 
-                :type="showPassword ? 'text' : 'password'" 
-                id="password" 
-                v-model="registerForm.password" 
+              <input
+                :type="showPassword ? 'text' : 'password'"
+                id="password"
+                v-model="registerForm.password"
                 required
                 :class="{ 'error': errors.password }"
               >
-              <button 
-                type="button" 
-                class="toggle-password" 
+              <button
+                type="button"
+                class="toggle-password"
                 @click="showPassword = !showPassword"
               >
                 {{ showPassword ? '🙈' : '👁️' }}
@@ -62,16 +62,16 @@
           <div class="form-group">
             <label for="confirmPassword">Confirm Password</label>
             <div class="password-input">
-              <input 
-                :type="showConfirmPassword ? 'text' : 'password'" 
-                id="confirmPassword" 
-                v-model="registerForm.confirmPassword" 
+              <input
+                :type="showConfirmPassword ? 'text' : 'password'"
+                id="confirmPassword"
+                v-model="registerForm.confirmPassword"
                 required
                 :class="{ 'error': errors.confirmPassword }"
               >
-              <button 
-                type="button" 
-                class="toggle-password" 
+              <button
+                type="button"
+                class="toggle-password"
                 @click="showConfirmPassword = !showConfirmPassword"
               >
                 {{ showConfirmPassword ? '🙈' : '👁️' }}
@@ -141,12 +141,12 @@ export default {
         confirmPassword: '',
         terms: ''
       };
-      
+
       if (!this.registerForm.name.trim()) {
         this.errors.name = 'Name is required';
         isValid = false;
       }
-      
+
       if (!this.registerForm.email.trim()) {
         this.errors.email = 'Email is required';
         isValid = false;
@@ -154,7 +154,7 @@ export default {
         this.errors.email = 'Please enter a valid email address';
         isValid = false;
       }
-      
+
       if (!this.registerForm.username.trim()) {
         this.errors.username = 'Username is required';
         isValid = false;
@@ -162,7 +162,7 @@ export default {
         this.errors.username = 'Username must be at least 3 characters';
         isValid = false;
       }
-      
+
       if (!this.registerForm.password) {
         this.errors.password = 'Password is required';
         isValid = false;
@@ -170,7 +170,7 @@ export default {
         this.errors.password = 'Password must be at least 6 characters';
         isValid = false;
       }
-      
+
       if (!this.registerForm.confirmPassword) {
         this.errors.confirmPassword = 'Please confirm your password';
         isValid = false;
@@ -178,12 +178,12 @@ export default {
         this.errors.confirmPassword = 'Passwords do not match';
         isValid = false;
       }
-      
+
       if (!this.registerForm.terms) {
         this.errors.terms = 'You must agree to the Terms of Service and Privacy Policy';
         isValid = false;
       }
-      
+
       return isValid;
     },
     validateEmail(email) {
@@ -192,10 +192,10 @@ export default {
     },
     handleRegister() {
       if (!this.validateForm()) return;
-      
+
       this.isLoading = true;
       this.errorMessage = '';
-      
+
       // Simulate API call
       setTimeout(() => {
         // For demo purposes, we'll check if the username is already taken
@@ -210,14 +210,14 @@ export default {
             email: this.registerForm.email,
             avatar: 'https://via.placeholder.com/50'
           };
-          
+
           // Store user in localStorage
           localStorage.setItem('user', JSON.stringify(user));
-          
+
           // Emit register success event to parent
           this.$emit('register-success', user);
         }
-        
+
         this.isLoading = false;
       }, 1500);
     },
@@ -249,6 +249,20 @@ export default {
   box-shadow: 0 2px 10px var(--shadow-color);
   overflow: hidden;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin: 0 15px;
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    border-radius: 0;
+    max-width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .auth-container {
+    padding: 0;
+  }
 }
 
 .auth-header {

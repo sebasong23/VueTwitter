@@ -1,5 +1,5 @@
 <template>
-  <div class="user-profile">
+  <div class="user-profile" @click="viewProfile">
     <div class="user-avatar">
       <img :src="user.avatar" :alt="user.name">
     </div>
@@ -8,7 +8,7 @@
       <div class="user-username">@{{ user.username }}</div>
     </div>
     <div class="user-actions">
-      <button class="logout-btn" @click="logout">Logout</button>
+      <button class="logout-btn" @click.stop="logout">Logout</button>
     </div>
   </div>
 </template>
@@ -26,9 +26,13 @@ export default {
     logout() {
       // Remove user from localStorage
       localStorage.removeItem('user');
-      
+
       // Emit logout event to parent
       this.$emit('logout');
+    },
+    viewProfile() {
+      // Emit event to navigate to user profile
+      this.$emit('view-profile', this.user.username);
     }
   }
 }
