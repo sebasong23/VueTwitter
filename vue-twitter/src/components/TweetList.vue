@@ -193,6 +193,41 @@ export default {
   border-radius: 16px;
   overflow: hidden;
   transition: background-color 0.3s ease, border-color 0.3s ease;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .tweet-list {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .compose-tweet {
+    padding: 10px;
+  }
+
+  .compose-avatar img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .compose-input textarea {
+    height: 60px;
+    font-size: 14px;
+  }
+
+  .compose-tool {
+    font-size: 16px;
+    margin-right: 10px;
+  }
+
+  .tweet-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
 }
 
 .compose-tweet {

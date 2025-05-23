@@ -8,10 +8,10 @@
         <form @submit.prevent="handleLogin">
           <div class="form-group">
             <label for="username">Username or email</label>
-            <input 
-              type="text" 
-              id="username" 
-              v-model="loginForm.username" 
+            <input
+              type="text"
+              id="username"
+              v-model="loginForm.username"
               required
               :class="{ 'error': errors.username }"
             >
@@ -20,16 +20,16 @@
           <div class="form-group">
             <label for="password">Password</label>
             <div class="password-input">
-              <input 
-                :type="showPassword ? 'text' : 'password'" 
-                id="password" 
-                v-model="loginForm.password" 
+              <input
+                :type="showPassword ? 'text' : 'password'"
+                id="password"
+                v-model="loginForm.password"
                 required
                 :class="{ 'error': errors.password }"
               >
-              <button 
-                type="button" 
-                class="toggle-password" 
+              <button
+                type="button"
+                class="toggle-password"
                 @click="showPassword = !showPassword"
               >
                 {{ showPassword ? '🙈' : '👁️' }}
@@ -87,12 +87,12 @@ export default {
         username: '',
         password: ''
       };
-      
+
       if (!this.loginForm.username.trim()) {
         this.errors.username = 'Username or email is required';
         isValid = false;
       }
-      
+
       if (!this.loginForm.password) {
         this.errors.password = 'Password is required';
         isValid = false;
@@ -100,15 +100,15 @@ export default {
         this.errors.password = 'Password must be at least 6 characters';
         isValid = false;
       }
-      
+
       return isValid;
     },
     handleLogin() {
       if (!this.validateForm()) return;
-      
+
       this.isLoading = true;
       this.errorMessage = '';
-      
+
       // Simulate API call
       setTimeout(() => {
         // For demo purposes, we'll check for a specific username/password
@@ -121,19 +121,19 @@ export default {
             email: 'demo@example.com',
             avatar: 'https://via.placeholder.com/50'
           };
-          
+
           // Store user in localStorage if remember me is checked
           if (this.loginForm.remember) {
             localStorage.setItem('user', JSON.stringify(user));
           }
-          
+
           // Emit login event to parent
           this.$emit('login-success', user);
         } else {
           // Login failed
           this.errorMessage = 'Invalid username or password';
         }
-        
+
         this.isLoading = false;
       }, 1000);
     },
@@ -162,6 +162,20 @@ export default {
   box-shadow: 0 2px 10px var(--shadow-color);
   overflow: hidden;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin: 0 15px;
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    border-radius: 0;
+    max-width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .auth-container {
+    padding: 0;
+  }
 }
 
 .auth-header {
