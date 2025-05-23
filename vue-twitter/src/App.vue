@@ -1,12 +1,27 @@
 <template>
-  <div class="twitter-app">
-    <TwitterHeader />
-    <div class="main-content">
+  <div class="twitter-app" :class="{ 'dark-theme': isDarkMode }">
+    <TwitterHeader
+      @theme-change="handleThemeChange"
+      @login="showAuth = true"
+      @logout="handleLogout"
+      :user="currentUser"
+    />
+    <div class="main-content" v-if="currentUser || !requireAuth">
       <TweetList ref="tweetList" :filtered-tweets="filteredTweets" />
       <Sidebar
         @search="handleSearch"
         @select-result="handleSelectResult"
       />
+    </div>
+    <div class="welcome-screen" v-else-if="!showAuth">
+      <div class="welcome-content">
+        <h1>Welcome to Vue Twitter</h1>
+        <p>Connect with friends and the world around you on Vue Twitter.</p>
+        <div class="welcome-buttons">
+          <button class="primary-btn" @click="showAuth = true">Log in</button>
+          <button class="secondary-btn" @click="showAuth = true; authMode = 'register'">Sign up</button>
+        </div>
+      </div>
     </div>
     <div class="search-overlay" v-if="isSearching">
       <div class="search-info">
@@ -15,6 +30,11 @@
         <button class="clear-search-btn" @click="clearSearch">Clear search</button>
       </div>
     </div>
+    <Auth
+      v-if="showAuth"
+      @auth-success="handleAuthSuccess"
+      @close="showAuth = false"
+    />
   </div>
 </template>
 
@@ -22,13 +42,15 @@
 import TwitterHeader from './components/Header.vue'
 import TweetList from './components/TweetList.vue'
 import Sidebar from './components/Sidebar.vue'
+import Auth from './components/Auth.vue'
 
 export default {
   name: 'App',
   components: {
     TwitterHeader,
     TweetList,
-    Sidebar
+    Sidebar,
+    Auth
   },
   data() {
     return {
@@ -36,7 +58,12 @@ export default {
       searchQuery: '',
       searchTab: 'top',
       filteredTweets: [],
-      allTweets: []
+      allTweets: [],
+      isDarkMode: false,
+      currentUser: null,
+      showAuth: false,
+      authMode: 'login',
+      requireAuth: false // Set to true to require authentication
     }
   },
   methods: {
@@ -66,6 +93,17 @@ export default {
       this.searchQuery = '';
       this.isSearching = false;
       this.filteredTweets = [];
+    },
+    handleThemeChange(isDark) {
+      this.isDarkMode = isDark;
+    },
+    handleAuthSuccess(user) {
+      this.currentUser = user;
+      this.showAuth = false;
+    },
+    handleLogout() {
+      this.currentUser = null;
+      localStorage.removeItem('user');
     }
   },
   mounted() {
@@ -76,11 +114,56 @@ export default {
         this.allTweets = this.$refs.tweetList.tweets;
       }
     });
+
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('darkMode');
+    this.isDarkMode = savedTheme === 'true';
+
+    // Check for saved user
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      try {
+        this.currentUser = JSON.parse(savedUser);
+      } catch (e) {
+        console.error('Error parsing saved user:', e);
+        localStorage.removeItem('user');
+      }
+    }
   }
 }
 </script>
 
 <style>
+:root {
+  /* Light theme (default) */
+  --primary-color: #1da1f2;
+  --primary-color-dark: #0c8bd9;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f8fa;
+  --text-primary: #14171a;
+  --text-secondary: #657786;
+  --border-color: #e1e8ed;
+  --hover-color: rgba(29, 161, 242, 0.1);
+  --overlay-bg: rgba(29, 161, 242, 0.9);
+  --overlay-text: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.25);
+}
+
+.dark-theme {
+  /* Dark theme */
+  --primary-color: #1da1f2;
+  --primary-color-dark: #0c8bd9;
+  --bg-primary: #15202b;
+  --bg-secondary: #192734;
+  --text-primary: #ffffff;
+  --text-secondary: #8899a6;
+  --border-color: #38444d;
+  --hover-color: rgba(29, 161, 242, 0.1);
+  --overlay-bg: rgba(29, 161, 242, 0.9);
+  --overlay-text: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -89,9 +172,10 @@ export default {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background-color: #f5f8fa;
-  color: #14171a;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   line-height: 1.3;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #app {
@@ -117,11 +201,11 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background-color: rgba(29, 161, 242, 0.9);
-  color: white;
+  background-color: var(--overlay-bg);
+  color: var(--overlay-text);
   padding: 10px 0;
   z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 3px var(--shadow-color);
 }
 
 .search-info {
@@ -144,7 +228,7 @@ body {
 
 .clear-search-btn {
   background-color: white;
-  color: #1da1f2;
+  color: var(--primary-color);
   border: none;
   border-radius: 30px;
   padding: 6px 15px;
@@ -155,6 +239,71 @@ body {
 
 .clear-search-btn:hover {
   background-color: rgba(255, 255, 255, 0.9);
+}
+
+.welcome-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 60px);
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  transition: background-color 0.3s ease;
+}
+
+.welcome-content {
+  text-align: center;
+  max-width: 600px;
+}
+
+.welcome-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+.welcome-content p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: var(--text-secondary);
+}
+
+.welcome-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.primary-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.primary-btn:hover {
+  background-color: var(--primary-color-dark);
+}
+
+.secondary-btn {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 30px;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.secondary-btn:hover {
+  background-color: rgba(29, 161, 242, 0.1);
 }
 
 @media (max-width: 768px) {
@@ -173,6 +322,11 @@ body {
 
   .clear-search-btn {
     align-self: flex-end;
+  }
+
+  .welcome-buttons {
+    flex-direction: column;
+    gap: 10px;
   }
 }
 </style>

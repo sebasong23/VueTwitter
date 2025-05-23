@@ -7,6 +7,10 @@
 - [x] Add tweet display functionality
 - [x] Add tweet creation functionality
 - [x] Add search functionality
+- [x] Implement dark mode
+- [x] Implement user authentication
+- [ ] Add responsive design improvements
+- [ ] Add user profile pages
 
 ## In Progress
 
@@ -17,3 +21,5 @@
 - [x] Add tweet display functionality
 - [x] Add tweet creation functionality
 - [x] Add search functionality
+- [x] Implement dark mode
+- [x] Implement user authentication

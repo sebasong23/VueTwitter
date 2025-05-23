@@ -158,16 +158,16 @@ export default {
 .tweet {
   display: flex;
   padding: 15px;
-  border-bottom: 1px solid #e1e8ed;
-  transition: background-color 0.2s;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .tweet:hover {
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: var(--hover-color);
 }
 
 .tweet-expanded {
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
 }
 
 .tweet-avatar {
@@ -197,26 +197,29 @@ export default {
 }
 
 .tweet-username, .tweet-time {
-  color: #657786;
+  color: var(--text-secondary);
   margin-right: 5px;
+  transition: color 0.3s ease;
 }
 
 .tweet-menu {
   margin-left: auto;
-  color: #657786;
+  color: var(--text-secondary);
   cursor: pointer;
   position: relative;
+  transition: color 0.3s ease;
 }
 
 .tweet-menu-dropdown {
   position: absolute;
   right: 0;
   top: 20px;
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
   border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 4px var(--shadow-color);
   width: 200px;
   z-index: 10;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .menu-item {
@@ -226,7 +229,7 @@ export default {
 }
 
 .menu-item:hover {
-  background-color: #f5f8fa;
+  background-color: var(--hover-color);
 }
 
 .tweet-text {
@@ -236,8 +239,9 @@ export default {
 }
 
 .tweet-text a {
-  color: #1da1f2;
+  color: var(--primary-color);
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .tweet-text a:hover {
@@ -245,15 +249,17 @@ export default {
 }
 
 .show-more {
-  color: #1da1f2;
+  color: var(--primary-color);
   cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .tweet-media {
   margin-bottom: 10px;
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid #e1e8ed;
+  border: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
 }
 
 .media-grid-1 .media-item {
@@ -287,9 +293,9 @@ export default {
 .tweet-action {
   display: flex;
   align-items: center;
-  color: #657786;
+  color: var(--text-secondary);
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.3s ease;
 }
 
 .action-icon {
@@ -297,11 +303,11 @@ export default {
 }
 
 .tweet-action:hover {
-  color: #1da1f2;
+  color: var(--primary-color);
 }
 
 .tweet-action:nth-child(1):hover {
-  color: #1da1f2;
+  color: var(--primary-color);
 }
 
 .tweet-action:nth-child(2):hover {

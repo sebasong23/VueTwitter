@@ -187,17 +187,19 @@ export default {
 
 <style scoped>
 .tweet-list {
-  background-color: #ffffff;
-  border-left: 1px solid #e1e8ed;
-  border-right: 1px solid #e1e8ed;
+  background-color: var(--bg-primary);
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
   border-radius: 16px;
   overflow: hidden;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .compose-tweet {
   display: flex;
   padding: 15px;
-  border-bottom: 1px solid #e1e8ed;
+  border-bottom: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
 }
 
 .compose-avatar {
@@ -223,6 +225,9 @@ export default {
   margin-bottom: 10px;
   padding: 10px 0;
   font-family: inherit;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .compose-input textarea:focus {
@@ -233,8 +238,9 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #e1e8ed;
+  border-top: 1px solid var(--border-color);
   padding-top: 10px;
+  transition: border-color 0.3s ease;
 }
 
 .compose-tools {
@@ -242,10 +248,11 @@ export default {
 }
 
 .compose-tool {
-  color: #1da1f2;
+  color: var(--primary-color);
   margin-right: 15px;
   cursor: pointer;
   font-size: 18px;
+  transition: color 0.3s ease;
 }
 
 .compose-submit {
@@ -255,7 +262,8 @@ export default {
 
 .character-count {
   margin-right: 10px;
-  color: #657786;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }
 
 .character-count.warning {
@@ -267,18 +275,18 @@ export default {
 }
 
 .tweet-btn {
-  background-color: #1da1f2;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 30px;
   padding: 8px 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s ease;
 }
 
 .tweet-btn:hover {
-  background-color: #0c8bd9;
+  background-color: var(--primary-color-dark);
 }
 
 .tweet-btn:disabled {
