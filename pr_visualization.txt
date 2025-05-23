@@ -1,0 +1,39 @@
++-----------------------------------------------------------------------+
+|                                                                       |
+|  GitHub Pull Request                                                  |
+|                                                                       |
++-----------------------------------------------------------------------+
+|                                                                       |
+|  Title: Add search functionality to Vue Twitter Clone                 |
+|                                                                       |
+|  base: master  ←  compare: feature/search-functionality              |
+|                                                                       |
+|  +---------------------------------------------------------------+   |
+|  |                                                               |   |
+|  |  # Pull Request: Add Search Functionality to Vue Twitter Clone|   |
+|  |                                                               |   |
+|  |  ## Description                                               |   |
+|  |  This pull request adds a comprehensive search functionality  |   |
+|  |  to the Vue Twitter Clone application, allowing users to      |   |
+|  |  filter tweets by content, username, or handle in real-time.  |   |
+|  |                                                               |   |
+|  |  ## Changes Made                                              |   |
+|  |  - Added a search input field and search button               |   |
+|  |  - Implemented real-time filtering of tweets                  |   |
+|  |  - Added search across multiple fields                        |   |
+|  |  - Implemented "No results" message                           |   |
+|  |  - Ensured search works in both light and dark modes          |   |
+|  |  - Added comprehensive test coverage                          |   |
+|  |  - Updated documentation                                      |   |
+|  |                                                               |   |
+|  |  [... more details ...]                                       |   |
+|  |                                                               |   |
+|  +---------------------------------------------------------------+   |
+|                                                                       |
+|  Files changed: 13                                                    |
+|  Comments: 0                                                          |
+|  Commits: 1                                                           |
+|                                                                       |
+|  [Create pull request]                                                |
+|                                                                       |
++-----------------------------------------------------------------------+
