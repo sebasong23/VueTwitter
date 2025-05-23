@@ -6,10 +6,9 @@
 - [x] Implement basic Twitter clone UI
 - [x] Add tweet display functionality
 - [x] Add tweet creation functionality
-- [ ] Add search functionality
+- [x] Add search functionality
 
 ## In Progress
-- [ ] Add search functionality
 
 ## Done
 - [x] Initialize Vue.js project
@@ -17,3 +16,4 @@
 - [x] Implement basic Twitter clone UI
 - [x] Add tweet display functionality
 - [x] Add tweet creation functionality
+- [x] Add search functionality

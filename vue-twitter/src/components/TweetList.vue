@@ -32,14 +32,26 @@
       </div>
     </div>
     <div class="tweets-container">
-      <Tweet
-        v-for="tweet in tweets"
-        :key="tweet.id"
-        :tweet="tweet"
-        @reply="handleReply"
-        @share="handleShare"
-        @open-media="handleMediaView"
-      />
+      <div v-if="filteredTweets && filteredTweets.length > 0">
+        <Tweet
+          v-for="tweet in filteredTweets"
+          :key="tweet.id"
+          :tweet="tweet"
+          @reply="handleReply"
+          @share="handleShare"
+          @open-media="handleMediaView"
+        />
+      </div>
+      <div v-else>
+        <Tweet
+          v-for="tweet in tweets"
+          :key="tweet.id"
+          :tweet="tweet"
+          @reply="handleReply"
+          @share="handleShare"
+          @open-media="handleMediaView"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -51,6 +63,12 @@ export default {
   name: 'TweetList',
   components: {
     Tweet
+  },
+  props: {
+    filteredTweets: {
+      type: Array,
+      default: () => []
+    }
   },
   data() {
     return {
