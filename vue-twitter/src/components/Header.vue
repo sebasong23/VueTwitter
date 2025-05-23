@@ -1,7 +1,9 @@
 <template>
   <header class="twitter-header">
-    <div class="logo">
-      <h1>Vue Twitter</h1>
+    <div class="header-left">
+      <div class="logo">
+        <h1>Vue Twitter</h1>
+      </div>
     </div>
     <nav class="main-nav">
       <ul>
@@ -27,7 +29,28 @@
         v-if="user"
         :user="user"
         @logout="$emit('logout')"
+        class="desktop-only"
       />
+    </div>
+    <button class="mobile-menu-btn" @click="toggleMobileMenu">
+      <span>☰</span>
+    </button>
+    <div class="mobile-menu" v-if="showMobileMenu" @click="toggleMobileMenu">
+      <div class="mobile-menu-content" @click.stop>
+        <div class="mobile-menu-header">
+          <h2>Account info</h2>
+          <button class="close-btn" @click="toggleMobileMenu">✕</button>
+        </div>
+        <UserProfile
+          v-if="user"
+          :user="user"
+          @logout="handleLogout"
+        />
+        <div v-else class="mobile-auth-buttons">
+          <button class="login-btn" @click="handleLogin">Log in</button>
+          <button class="signup-btn" @click="handleSignup">Sign up</button>
+        </div>
+      </div>
     </div>
   </header>
 </template>
@@ -48,7 +71,8 @@ export default {
   },
   data() {
     return {
-      isDarkMode: false
+      isDarkMode: false,
+      showMobileMenu: false
     }
   },
   methods: {
@@ -61,6 +85,26 @@ export default {
 
       // Emit event to parent components
       this.$emit('theme-change', this.isDarkMode);
+    },
+    toggleMobileMenu() {
+      this.showMobileMenu = !this.showMobileMenu;
+      if (this.showMobileMenu) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    },
+    handleLogout() {
+      this.toggleMobileMenu();
+      this.$emit('logout');
+    },
+    handleLogin() {
+      this.toggleMobileMenu();
+      this.$emit('login');
+    },
+    handleSignup() {
+      this.toggleMobileMenu();
+      this.$emit('signup');
     }
   },
   mounted() {
@@ -83,6 +127,14 @@ export default {
   border-bottom: 1px solid var(--border-color);
   background-color: var(--bg-primary);
   transition: background-color 0.3s ease, border-color 0.3s ease;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
 }
 
 .logo h1 {
@@ -171,5 +223,136 @@ export default {
 
 .login-btn:hover {
   background-color: rgba(29, 161, 242, 0.1);
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.mobile-menu-content {
+  background-color: var(--bg-primary);
+  width: 80%;
+  max-width: 300px;
+  height: 100%;
+  overflow-y: auto;
+  transition: background-color 0.3s ease;
+  animation: slideIn 0.3s forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mobile-menu-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.mobile-auth-buttons {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.signup-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.signup-btn:hover {
+  background-color: var(--primary-color-dark);
+}
+
+@media (max-width: 1024px) {
+  .twitter-header {
+    padding: 10px 15px;
+  }
+
+  .main-nav li {
+    margin: 0 10px;
+  }
+
+  .tweet-btn {
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-nav {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .tweet-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .twitter-header {
+    padding: 10px;
+  }
+
+  .logo h1 {
+    font-size: 1.2rem;
+  }
+
+  .theme-toggle {
+    margin-right: 5px;
+  }
+
+  .login-btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
 }
 </style>

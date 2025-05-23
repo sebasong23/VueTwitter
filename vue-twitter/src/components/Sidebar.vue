@@ -319,6 +319,19 @@ export default {
 <style scoped>
 .sidebar {
   padding: 0 20px;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
 }
 
 .search-box {

@@ -4,6 +4,7 @@
       @theme-change="handleThemeChange"
       @login="showAuth = true"
       @logout="handleLogout"
+      @signup="showAuth = true; authMode = 'register'"
       :user="currentUser"
     />
     <div class="main-content" v-if="currentUser || !requireAuth">
@@ -35,6 +36,11 @@
       @auth-success="handleAuthSuccess"
       @close="showAuth = false"
     />
+    <MobileNavigation
+      v-if="currentUser || !requireAuth"
+      :isDarkMode="isDarkMode"
+      @tab-change="handleTabChange"
+    />
   </div>
 </template>
 
@@ -43,6 +49,7 @@ import TwitterHeader from './components/Header.vue'
 import TweetList from './components/TweetList.vue'
 import Sidebar from './components/Sidebar.vue'
 import Auth from './components/Auth.vue'
+import MobileNavigation from './components/MobileNavigation.vue'
 
 export default {
   name: 'App',
@@ -50,7 +57,8 @@ export default {
     TwitterHeader,
     TweetList,
     Sidebar,
-    Auth
+    Auth,
+    MobileNavigation
   },
   data() {
     return {
@@ -104,6 +112,11 @@ export default {
     handleLogout() {
       this.currentUser = null;
       localStorage.removeItem('user');
+    },
+    handleTabChange(tab) {
+      console.log('Tab changed to:', tab);
+      // In a real app, we would navigate to the selected tab
+      // or update the UI accordingly
     }
   },
   mounted() {
@@ -194,6 +207,8 @@ body {
   grid-template-columns: 1fr 350px;
   gap: 20px;
   margin-top: 20px;
+  padding: 0 15px;
+  transition: all 0.3s ease;
 }
 
 .search-overlay {
@@ -306,6 +321,16 @@ body {
   background-color: rgba(29, 161, 242, 0.1);
 }
 
+@media (max-width: 1024px) {
+  .twitter-app {
+    max-width: 100%;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr 300px;
+  }
+}
+
 @media (max-width: 768px) {
   .main-content {
     grid-template-columns: 1fr;
@@ -327,6 +352,25 @@ body {
   .welcome-buttons {
     flex-direction: column;
     gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .twitter-app {
+    padding-bottom: 60px; /* Space for mobile navigation */
+  }
+
+  .main-content {
+    padding: 0 10px;
+    margin-top: 10px;
+  }
+
+  .welcome-content h1 {
+    font-size: 2rem;
+  }
+
+  .welcome-content p {
+    font-size: 1rem;
   }
 }
 </style>
