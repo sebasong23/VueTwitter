@@ -7,6 +7,7 @@
 - [x] Add tweet display functionality
 - [x] Add tweet creation functionality
 - [x] Add search functionality
+- [x] Implement dark mode
 
 ## In Progress
 
@@ -17,3 +18,4 @@
 - [x] Add tweet display functionality
 - [x] Add tweet creation functionality
 - [x] Add search functionality
+- [x] Implement dark mode

@@ -13,6 +13,14 @@
       </ul>
     </nav>
     <div class="user-actions">
+      <button
+        class="theme-toggle"
+        @click="toggleTheme"
+        :title="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+      >
+        <span v-if="isDarkMode">☀️</span>
+        <span v-else>🌙</span>
+      </button>
       <button class="tweet-btn">Tweet</button>
     </div>
   </header>
@@ -20,7 +28,32 @@
 
 <script>
 export default {
-  name: 'TwitterHeader'
+  name: 'TwitterHeader',
+  data() {
+    return {
+      isDarkMode: false
+    }
+  },
+  methods: {
+    toggleTheme() {
+      this.isDarkMode = !this.isDarkMode;
+      document.body.classList.toggle('dark-mode', this.isDarkMode);
+
+      // Save preference to localStorage
+      localStorage.setItem('darkMode', this.isDarkMode ? 'true' : 'false');
+
+      // Emit event to parent components
+      this.$emit('theme-change', this.isDarkMode);
+    }
+  },
+  mounted() {
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('darkMode');
+    if (savedTheme === 'true') {
+      this.isDarkMode = true;
+      document.body.classList.add('dark-mode');
+    }
+  }
 }
 </script>
 
@@ -30,12 +63,13 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  border-bottom: 1px solid #e1e8ed;
-  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .logo h1 {
-  color: #1da1f2;
+  color: var(--primary-color);
   font-size: 1.5rem;
   margin: 0;
 }
@@ -53,31 +87,56 @@ export default {
 
 .main-nav a {
   text-decoration: none;
-  color: #657786;
+  color: var(--text-secondary);
   font-weight: bold;
   padding: 10px 0;
+  transition: color 0.3s ease;
 }
 
 .main-nav a.active {
-  color: #1da1f2;
-  border-bottom: 2px solid #1da1f2;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
 }
 
 .main-nav a:hover {
-  color: #1da1f2;
+  color: var(--primary-color);
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  margin-right: 15px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background-color: var(--hover-color);
 }
 
 .tweet-btn {
-  background-color: #1da1f2;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 30px;
   padding: 10px 20px;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .tweet-btn:hover {
-  background-color: #0c8bd9;
+  background-color: var(--primary-color-dark);
 }
 </style>

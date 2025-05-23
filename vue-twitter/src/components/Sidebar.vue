@@ -343,16 +343,17 @@ export default {
   width: 100%;
   padding: 10px 15px 10px 40px;
   border-radius: 30px;
-  border: 1px solid #e1e8ed;
-  background-color: #f5f8fa;
-  transition: all 0.2s;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
 }
 
 .search-box input:focus {
   outline: none;
-  border-color: #1da1f2;
-  background-color: #ffffff;
-  box-shadow: 0 0 0 1px #1da1f2;
+  border-color: var(--primary-color);
+  background-color: var(--bg-primary);
+  box-shadow: 0 0 0 1px var(--primary-color);
 }
 
 .clear-search {
@@ -368,12 +369,13 @@ export default {
   top: 45px;
   left: 0;
   right: 0;
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 4px var(--shadow-color);
   z-index: 10;
   max-height: 400px;
   overflow-y: auto;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .search-tabs {

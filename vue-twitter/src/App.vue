@@ -1,6 +1,6 @@
 <template>
-  <div class="twitter-app">
-    <TwitterHeader />
+  <div class="twitter-app" :class="{ 'dark-theme': isDarkMode }">
+    <TwitterHeader @theme-change="handleThemeChange" />
     <div class="main-content">
       <TweetList ref="tweetList" :filtered-tweets="filteredTweets" />
       <Sidebar
@@ -36,7 +36,8 @@ export default {
       searchQuery: '',
       searchTab: 'top',
       filteredTweets: [],
-      allTweets: []
+      allTweets: [],
+      isDarkMode: false
     }
   },
   methods: {
@@ -66,6 +67,9 @@ export default {
       this.searchQuery = '';
       this.isSearching = false;
       this.filteredTweets = [];
+    },
+    handleThemeChange(isDark) {
+      this.isDarkMode = isDark;
     }
   },
   mounted() {
@@ -76,11 +80,45 @@ export default {
         this.allTweets = this.$refs.tweetList.tweets;
       }
     });
+
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('darkMode');
+    this.isDarkMode = savedTheme === 'true';
   }
 }
 </script>
 
 <style>
+:root {
+  /* Light theme (default) */
+  --primary-color: #1da1f2;
+  --primary-color-dark: #0c8bd9;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f8fa;
+  --text-primary: #14171a;
+  --text-secondary: #657786;
+  --border-color: #e1e8ed;
+  --hover-color: rgba(29, 161, 242, 0.1);
+  --overlay-bg: rgba(29, 161, 242, 0.9);
+  --overlay-text: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.25);
+}
+
+.dark-theme {
+  /* Dark theme */
+  --primary-color: #1da1f2;
+  --primary-color-dark: #0c8bd9;
+  --bg-primary: #15202b;
+  --bg-secondary: #192734;
+  --text-primary: #ffffff;
+  --text-secondary: #8899a6;
+  --border-color: #38444d;
+  --hover-color: rgba(29, 161, 242, 0.1);
+  --overlay-bg: rgba(29, 161, 242, 0.9);
+  --overlay-text: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -89,9 +127,10 @@ export default {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background-color: #f5f8fa;
-  color: #14171a;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   line-height: 1.3;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #app {
@@ -117,11 +156,11 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background-color: rgba(29, 161, 242, 0.9);
-  color: white;
+  background-color: var(--overlay-bg);
+  color: var(--overlay-text);
   padding: 10px 0;
   z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 3px var(--shadow-color);
 }
 
 .search-info {
@@ -144,7 +183,7 @@ body {
 
 .clear-search-btn {
   background-color: white;
-  color: #1da1f2;
+  color: var(--primary-color);
   border: none;
   border-radius: 30px;
   padding: 6px 15px;
