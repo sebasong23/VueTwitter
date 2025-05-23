@@ -20,6 +20,11 @@
           @edit-profile="showProfileEditor = true"
         />
       </div>
+      <div v-else-if="currentView === 'notifications'">
+        <NotificationsPage
+          @notification-click="handleNotificationClick"
+        />
+      </div>
       <Sidebar
         @search="handleSearch"
         @select-result="handleSelectResult"
@@ -69,6 +74,7 @@ import Auth from './components/Auth.vue'
 import MobileNavigation from './components/MobileNavigation.vue'
 import ProfilePage from './components/ProfilePage.vue'
 import ProfileEditor from './components/ProfileEditor.vue'
+import NotificationsPage from './components/NotificationsPage.vue'
 
 export default {
   name: 'App',
@@ -79,7 +85,8 @@ export default {
     Auth,
     MobileNavigation,
     ProfilePage,
-    ProfileEditor
+    ProfileEditor,
+    NotificationsPage
   },
   data() {
     return {
@@ -160,6 +167,8 @@ export default {
         } else {
           this.showAuth = true;
         }
+      } else if (tab === 'notifications') {
+        this.currentView = 'notifications';
       } else {
         // Handle other tabs
         console.log('Other tab selected:', tab);
@@ -178,6 +187,32 @@ export default {
     navigateToProfile(username) {
       this.profileUsername = username;
       this.currentView = 'profile';
+    },
+
+    handleNotificationClick(notification) {
+      // Handle different types of notifications
+      switch (notification.type) {
+        case 'like':
+        case 'retweet':
+        case 'reply':
+          // Navigate to the tweet
+          this.currentView = 'home';
+          // In a real app, we would fetch the specific tweet
+          // For now, we'll just clear any filtered tweets
+          this.filteredTweets = [];
+          break;
+        case 'follow':
+          // Navigate to the user's profile
+          this.navigateToProfile(notification.username);
+          break;
+        case 'mention':
+          // Navigate to the tweet with the mention
+          this.currentView = 'home';
+          // In a real app, we would fetch the specific tweet
+          // For now, we'll just clear any filtered tweets
+          this.filteredTweets = [];
+          break;
+      }
     }
   },
   mounted() {

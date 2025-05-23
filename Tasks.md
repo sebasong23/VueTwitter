@@ -11,6 +11,9 @@
 - [x] Implement user authentication
 - [x] Add responsive design improvements
 - [x] Add user profile pages
+- [x] Implement notifications
+- [ ] Add direct messaging functionality
+- [ ] Enhance tweet interactions
 
 ## In Progress
 
@@ -25,3 +28,4 @@
 - [x] Implement user authentication
 - [x] Add responsive design improvements
 - [x] Add user profile pages
+- [x] Implement notifications
