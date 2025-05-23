@@ -7,11 +7,11 @@
     </div>
     <nav class="main-nav">
       <ul>
-        <li><a href="#" class="active">Home</a></li>
-        <li><a href="#">Explore</a></li>
-        <li><a href="#">Notifications</a></li>
-        <li><a href="#">Messages</a></li>
-        <li v-if="user"><a href="#">Profile</a></li>
+        <li><a href="#" :class="{ active: activeTab === 'home' }" @click.prevent="setActiveTab('home')">Home</a></li>
+        <li><a href="#" :class="{ active: activeTab === 'explore' }" @click.prevent="setActiveTab('explore')">Explore</a></li>
+        <li><a href="#" :class="{ active: activeTab === 'notifications' }" @click.prevent="setActiveTab('notifications')">Notifications</a></li>
+        <li><a href="#" :class="{ active: activeTab === 'messages' }" @click.prevent="setActiveTab('messages')">Messages</a></li>
+        <li v-if="user"><a href="#" :class="{ active: activeTab === 'profile' }" @click.prevent="setActiveTab('profile')">Profile</a></li>
       </ul>
     </nav>
     <div class="user-actions">
@@ -29,6 +29,7 @@
         v-if="user"
         :user="user"
         @logout="$emit('logout')"
+        @view-profile="handleViewProfile"
         class="desktop-only"
       />
     </div>
@@ -45,6 +46,7 @@
           v-if="user"
           :user="user"
           @logout="handleLogout"
+          @view-profile="handleViewProfile"
         />
         <div v-else class="mobile-auth-buttons">
           <button class="login-btn" @click="handleLogin">Log in</button>
@@ -72,7 +74,8 @@ export default {
   data() {
     return {
       isDarkMode: false,
-      showMobileMenu: false
+      showMobileMenu: false,
+      activeTab: 'home'
     }
   },
   methods: {
@@ -105,6 +108,15 @@ export default {
     handleSignup() {
       this.toggleMobileMenu();
       this.$emit('signup');
+    },
+    setActiveTab(tab) {
+      this.activeTab = tab;
+      this.$emit('tab-change', tab);
+    },
+    handleViewProfile(username) {
+      this.activeTab = 'profile';
+      this.toggleMobileMenu();
+      this.$emit('view-profile', username);
     }
   },
   mounted() {

@@ -5,10 +5,21 @@
       @login="showAuth = true"
       @logout="handleLogout"
       @signup="showAuth = true; authMode = 'register'"
+      @tab-change="handleTabChange"
+      @view-profile="navigateToProfile"
       :user="currentUser"
     />
     <div class="main-content" v-if="currentUser || !requireAuth">
-      <TweetList ref="tweetList" :filtered-tweets="filteredTweets" />
+      <div v-if="currentView === 'home'">
+        <TweetList ref="tweetList" :filtered-tweets="filteredTweets" />
+      </div>
+      <div v-else-if="currentView === 'profile'">
+        <ProfilePage
+          :username="profileUsername"
+          :currentUser="currentUser"
+          @edit-profile="showProfileEditor = true"
+        />
+      </div>
       <Sidebar
         @search="handleSearch"
         @select-result="handleSelectResult"
@@ -36,6 +47,12 @@
       @auth-success="handleAuthSuccess"
       @close="showAuth = false"
     />
+    <ProfileEditor
+      v-if="showProfileEditor && currentUser"
+      :user="currentUser"
+      @save="updateUserProfile"
+      @close="showProfileEditor = false"
+    />
     <MobileNavigation
       v-if="currentUser || !requireAuth"
       :isDarkMode="isDarkMode"
@@ -50,6 +67,8 @@ import TweetList from './components/TweetList.vue'
 import Sidebar from './components/Sidebar.vue'
 import Auth from './components/Auth.vue'
 import MobileNavigation from './components/MobileNavigation.vue'
+import ProfilePage from './components/ProfilePage.vue'
+import ProfileEditor from './components/ProfileEditor.vue'
 
 export default {
   name: 'App',
@@ -58,7 +77,9 @@ export default {
     TweetList,
     Sidebar,
     Auth,
-    MobileNavigation
+    MobileNavigation,
+    ProfilePage,
+    ProfileEditor
   },
   data() {
     return {
@@ -71,7 +92,10 @@ export default {
       currentUser: null,
       showAuth: false,
       authMode: 'login',
-      requireAuth: false // Set to true to require authentication
+      requireAuth: false, // Set to true to require authentication
+      currentView: 'home', // 'home', 'profile', etc.
+      profileUsername: '',
+      showProfileEditor: false
     }
   },
   methods: {
@@ -82,19 +106,15 @@ export default {
       this.isSearching = this.searchQuery !== '';
     },
     handleSelectResult(result) {
-      // If it's a user result, we could navigate to their profile
-      // For now, just filter tweets by this user
+      // If it's a user result, navigate to their profile
       if (result.username) {
-        this.searchQuery = '@' + result.username;
-        this.isSearching = true;
-        // Filter tweets by this user
-        this.filteredTweets = this.allTweets.filter(tweet =>
-          tweet.username === result.username
-        );
+        this.navigateToProfile(result.username);
+        this.isSearching = false;
       } else {
         // If it's a tweet result, just show that tweet
         this.filteredTweets = [result];
         this.isSearching = true;
+        this.currentView = 'home';
       }
     },
     clearSearch() {
@@ -106,8 +126,23 @@ export default {
       this.isDarkMode = isDark;
     },
     handleAuthSuccess(user) {
-      this.currentUser = user;
+      // Add additional profile fields if they don't exist
+      const enhancedUser = {
+        ...user,
+        bio: user.bio || '',
+        location: user.location || '',
+        website: user.website || '',
+        coverImage: user.coverImage || '',
+        joinDate: user.joinDate || new Date().toISOString().split('T')[0],
+        following: user.following || 0,
+        followers: user.followers || 0
+      };
+
+      this.currentUser = enhancedUser;
       this.showAuth = false;
+
+      // Save the enhanced user to localStorage
+      localStorage.setItem('user', JSON.stringify(enhancedUser));
     },
     handleLogout() {
       this.currentUser = null;
@@ -115,8 +150,34 @@ export default {
     },
     handleTabChange(tab) {
       console.log('Tab changed to:', tab);
-      // In a real app, we would navigate to the selected tab
-      // or update the UI accordingly
+
+      if (tab === 'home') {
+        this.currentView = 'home';
+      } else if (tab === 'profile') {
+        if (this.currentUser) {
+          this.profileUsername = this.currentUser.username;
+          this.currentView = 'profile';
+        } else {
+          this.showAuth = true;
+        }
+      } else {
+        // Handle other tabs
+        console.log('Other tab selected:', tab);
+      }
+    },
+
+    updateUserProfile(updatedProfile) {
+      // In a real app, we would make an API call to update the user profile
+      // For now, we'll just update the currentUser object
+      this.currentUser = { ...this.currentUser, ...updatedProfile };
+
+      // Save to localStorage
+      localStorage.setItem('user', JSON.stringify(this.currentUser));
+    },
+
+    navigateToProfile(username) {
+      this.profileUsername = username;
+      this.currentView = 'profile';
     }
   },
   mounted() {
