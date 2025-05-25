@@ -9,7 +9,7 @@
 - [x] Add search functionality
 - [x] Implement dark mode
 - [x] Implement user authentication
-- [ ] Add responsive design improvements
+- [x] Add responsive design improvements
 - [ ] Add user profile pages
 
 ## In Progress
@@ -23,3 +23,4 @@
 - [x] Add search functionality
 - [x] Implement dark mode
 - [x] Implement user authentication
+- [x] Add responsive design improvements
