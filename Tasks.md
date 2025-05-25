@@ -10,7 +10,10 @@
 - [x] Implement dark mode
 - [x] Implement user authentication
 - [x] Add responsive design improvements
-- [ ] Add user profile pages
+- [x] Add user profile pages
+- [x] Implement notifications
+- [x] Add direct messaging functionality
+- [ ] Enhance tweet interactions
 
 ## In Progress
 
@@ -24,3 +27,6 @@
 - [x] Implement dark mode
 - [x] Implement user authentication
 - [x] Add responsive design improvements
+- [x] Add user profile pages
+- [x] Implement notifications
+- [x] Add direct messaging functionality

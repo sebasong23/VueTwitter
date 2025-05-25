@@ -7,11 +7,18 @@
     </div>
     <nav class="main-nav">
       <ul>
-        <li><a href="#" class="active">Home</a></li>
-        <li><a href="#">Explore</a></li>
-        <li><a href="#">Notifications</a></li>
-        <li><a href="#">Messages</a></li>
-        <li v-if="user"><a href="#">Profile</a></li>
+        <li><a href="#" :class="{ active: activeTab === 'home' }" @click.prevent="setActiveTab('home')">Home</a></li>
+        <li><a href="#" :class="{ active: activeTab === 'explore' }" @click.prevent="setActiveTab('explore')">Explore</a></li>
+        <li>
+          <a href="#" :class="{ active: activeTab === 'notifications' }" @click.prevent="setActiveTab('notifications')">
+            Notifications
+            <span class="notification-badge-container">
+              <NotificationBadge :count="unreadNotifications" />
+            </span>
+          </a>
+        </li>
+        <li><a href="#" :class="{ active: activeTab === 'messages' }" @click.prevent="setActiveTab('messages')">Messages</a></li>
+        <li v-if="user"><a href="#" :class="{ active: activeTab === 'profile' }" @click.prevent="setActiveTab('profile')">Profile</a></li>
       </ul>
     </nav>
     <div class="user-actions">
@@ -29,6 +36,7 @@
         v-if="user"
         :user="user"
         @logout="$emit('logout')"
+        @view-profile="handleViewProfile"
         class="desktop-only"
       />
     </div>
@@ -45,6 +53,7 @@
           v-if="user"
           :user="user"
           @logout="handleLogout"
+          @view-profile="handleViewProfile"
         />
         <div v-else class="mobile-auth-buttons">
           <button class="login-btn" @click="handleLogin">Log in</button>
@@ -57,11 +66,13 @@
 
 <script>
 import UserProfile from './UserProfile.vue'
+import NotificationBadge from './NotificationBadge.vue'
 
 export default {
   name: 'TwitterHeader',
   components: {
-    UserProfile
+    UserProfile,
+    NotificationBadge
   },
   props: {
     user: {
@@ -72,7 +83,9 @@ export default {
   data() {
     return {
       isDarkMode: false,
-      showMobileMenu: false
+      showMobileMenu: false,
+      activeTab: 'home',
+      unreadNotifications: 0
     }
   },
   methods: {
@@ -105,6 +118,15 @@ export default {
     handleSignup() {
       this.toggleMobileMenu();
       this.$emit('signup');
+    },
+    setActiveTab(tab) {
+      this.activeTab = tab;
+      this.$emit('tab-change', tab);
+    },
+    handleViewProfile(username) {
+      this.activeTab = 'profile';
+      this.toggleMobileMenu();
+      this.$emit('view-profile', username);
     }
   },
   mounted() {
@@ -113,6 +135,76 @@ export default {
     if (savedTheme === 'true') {
       this.isDarkMode = true;
       document.body.classList.add('dark-mode');
+    }
+
+    // Fetch unread notifications count
+    this.fetchUnreadNotificationsCount();
+
+    // Set up interval to check for new notifications
+    this.notificationInterval = setInterval(() => {
+      this.fetchUnreadNotificationsCount();
+    }, 60000); // Check every minute
+  },
+
+  beforeDestroy() {
+    // Clear the notification interval when component is destroyed
+    if (this.notificationInterval) {
+      clearInterval(this.notificationInterval);
+    }
+  },
+
+  methods: {
+    toggleTheme() {
+      this.isDarkMode = !this.isDarkMode;
+      document.body.classList.toggle('dark-mode', this.isDarkMode);
+
+      // Save preference to localStorage
+      localStorage.setItem('darkMode', this.isDarkMode ? 'true' : 'false');
+
+      // Emit event to parent components
+      this.$emit('theme-change', this.isDarkMode);
+    },
+    toggleMobileMenu() {
+      this.showMobileMenu = !this.showMobileMenu;
+      if (this.showMobileMenu) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    },
+    handleLogout() {
+      this.toggleMobileMenu();
+      this.$emit('logout');
+    },
+    handleLogin() {
+      this.toggleMobileMenu();
+      this.$emit('login');
+    },
+    handleSignup() {
+      this.toggleMobileMenu();
+      this.$emit('signup');
+    },
+    setActiveTab(tab) {
+      this.activeTab = tab;
+      this.$emit('tab-change', tab);
+    },
+    handleViewProfile(username) {
+      this.activeTab = 'profile';
+      this.toggleMobileMenu();
+      this.$emit('view-profile', username);
+    },
+    fetchUnreadNotificationsCount() {
+      // In a real app, we would make an API call to get the count
+      // For now, we'll check localStorage
+      const savedNotifications = localStorage.getItem('notifications');
+      if (savedNotifications) {
+        try {
+          const notifications = JSON.parse(savedNotifications);
+          this.unreadNotifications = notifications.filter(n => !n.read).length;
+        } catch (e) {
+          console.error('Error parsing saved notifications:', e);
+        }
+      }
     }
   }
 }
@@ -169,6 +261,11 @@ export default {
 
 .main-nav a:hover {
   color: var(--primary-color);
+}
+
+.notification-badge-container {
+  position: relative;
+  display: inline-block;
 }
 
 .user-actions {

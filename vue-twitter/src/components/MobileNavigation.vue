@@ -9,7 +9,10 @@
       <span class="nav-label">Explore</span>
     </div>
     <div class="nav-item" :class="{ active: activeTab === 'notifications' }" @click="setActiveTab('notifications')">
-      <span class="nav-icon">🔔</span>
+      <span class="nav-icon">
+        🔔
+        <NotificationBadge v-if="unreadNotifications > 0" :count="unreadNotifications" />
+      </span>
       <span class="nav-label">Notifications</span>
     </div>
     <div class="nav-item" :class="{ active: activeTab === 'messages' }" @click="setActiveTab('messages')">
@@ -24,8 +27,13 @@
 </template>
 
 <script>
+import NotificationBadge from './NotificationBadge.vue'
+
 export default {
   name: 'MobileNavigation',
+  components: {
+    NotificationBadge
+  },
   props: {
     isDarkMode: {
       type: Boolean,
@@ -34,13 +42,42 @@ export default {
   },
   data() {
     return {
-      activeTab: 'home'
+      activeTab: 'home',
+      unreadNotifications: 0
     }
   },
   methods: {
     setActiveTab(tab) {
       this.activeTab = tab;
       this.$emit('tab-change', tab);
+    },
+    fetchUnreadNotificationsCount() {
+      // In a real app, we would make an API call to get the count
+      // For now, we'll check localStorage
+      const savedNotifications = localStorage.getItem('notifications');
+      if (savedNotifications) {
+        try {
+          const notifications = JSON.parse(savedNotifications);
+          this.unreadNotifications = notifications.filter(n => !n.read).length;
+        } catch (e) {
+          console.error('Error parsing saved notifications:', e);
+        }
+      }
+    }
+  },
+  mounted() {
+    // Fetch unread notifications count
+    this.fetchUnreadNotificationsCount();
+
+    // Set up interval to check for new notifications
+    this.notificationInterval = setInterval(() => {
+      this.fetchUnreadNotificationsCount();
+    }, 60000); // Check every minute
+  },
+  beforeDestroy() {
+    // Clear the notification interval when component is destroyed
+    if (this.notificationInterval) {
+      clearInterval(this.notificationInterval);
     }
   }
 }
@@ -81,6 +118,7 @@ export default {
 .nav-icon {
   font-size: 1.2rem;
   margin-bottom: 2px;
+  position: relative;
 }
 
 .nav-label {
